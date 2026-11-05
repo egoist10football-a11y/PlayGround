@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#080a0b" />
+  <meta name="description" content="BLACKSITE // ZERO HOUR — a 3D tactical survival firefight in a forgotten desert blacksite." />
+  <title>BLACKSITE // ZERO HOUR</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main id="app">
+    <canvas id="game-canvas" aria-label="3D tactical shooter"></canvas>
+
+    <div class="screen-fx" aria-hidden="true">
+      <div class="fx-vignette"></div>
+      <div class="fx-grain"></div>
+      <div class="fx-scanlines"></div>
+      <div id="damage-flash"></div>
+      <div id="low-health"></div>
+    </div>
+
+    <!-- BOOT -->
+    <section id="boot" class="boot" aria-live="polite">
+      <div class="boot-mark"><span></span><span></span><span></span></div>
+      <div class="boot-brand">BLACKSITE <b>//</b> ZERO HOUR</div>
+      <div class="boot-bar"><i id="boot-fill"></i></div>
+      <div class="boot-log" id="boot-log">ESTABLISHING SECURE UPLINK</div>
+      <div class="boot-corner">TACTICAL SIMULATION ENVIRONMENT</div>
+    </section>
+
+    <!-- MAIN MENU -->
+    <section id="menu" class="menu hidden">
+      <div class="menu-shade"></div>
+      <header class="menu-top">
+        <div class="brand">
+          <div class="brand-glyph" aria-hidden="true">
+            <svg viewBox="0 0 48 48"><path d="M24 3 44 14v20L24 45 4 34V14Z"/><path d="m24 11 11 6v8L24 31 13 25v-8Z"/><path d="m24 18 4 2v4l-4 2-4-2v-4Z"/></svg>
+          </div>
+          <div>
+            <div class="brand-name">OVERWATCH</div>
+            <div class="brand-sub">TACTICAL OPERATIONS GROUP</div>
+          </div>
+        </div>
+        <div class="menu-status">
+          <span class="status-dot"></span>
+          <div><b>UPLINK STABLE</b><small>SECTOR 07 // NIGHT CYCLE</small></div>
+          <span class="menu-clock" id="menu-clock">03:17:42</span>
+        </div>
+      </header>
+
+      <div class="menu-content">
+        <div class="menu-hero">
+          <div class="eyebrow"><i></i> CLASSIFIED OPERATION <span>//</span> 12 NOV 2031</div>
+          <h1 class="title">
+            <span class="title-solid">BLACKSITE</span>
+            <span class="title-ghost">ZERO HOUR</span>
+          </h1>
+          <p class="hero-copy">A dead relay station. A desert full of hostile armor. One operator left on the net. Hold the compound until extraction.</p>
+
+          <div class="mission-card">
+            <div class="mission-head">
+              <div><span>ACTIVE OPERATION</span><b>IRON VEIL</b></div>
+              <div class="mission-code">OP-7741<br><small>TOP SECRET</small></div>
+            </div>
+            <div class="mission-objectives">
+              <div class="obj-row"><span class="obj-num">01</span><div><b>HOLD THE BLACKSITE</b><small>REPEL 5 ESCALATING ASSAULT WAVES</small></div><em>ACTIVE</em></div>
+              <div class="obj-row"><span class="obj-num">02</span><div><b>ELIMINATE THE WARDEN</b><small>HEAVY UNIT WILL BREACH ON FINAL WAVE</small></div><em>INTEL</em></div>
+              <div class="obj-row"><span class="obj-num">03</span><div><b>SURVIVE TO EXTRACTION</b><small>NO REINFORCEMENTS. NO SECOND CHANCES.</small></div><em>CRITICAL</em></div>
+            </div>
+            <div class="loadout">
+              <div class="loadout-label">DEPLOYMENT LOADOUT</div>
+              <div class="loadout-items">
+                <div class="load-item"><span class="load-icon rifle-icon"></span><div><b>VK-4 HAVOC</b><small>5.56 ASSAULT RIFLE</small></div></div>
+                <div class="load-item"><span class="load-icon pistol-icon"></span><div><b>P9 SIDEARM</b><small>9MM BACKUP</small></div></div>
+                <div class="load-item"><span class="load-icon frag-icon"></span><div><b>M67 FRAG</b><small>× 2</small></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="deploy-row">
+            <button id="deploy" class="deploy-btn" type="button">
+              <span class="deploy-scan"></span>
+              <span class="deploy-main">DEPLOY TO SECTOR 07</span>
+              <span class="deploy-sub">CLICK TO ENGAGE <kbd>↵</kbd></span>
+            </button>
+            <div class="deploy-note">
+              <span>AUDIO RECOMMENDED</span>
+              <span>MOUSE + KEYBOARD / TOUCH</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="menu-side">
+          <div class="side-card intel">
+            <div class="side-head"><span>MISSION INTEL</span><b>LIVE FEED</b></div>
+            <div class="sector-map" aria-hidden="true">
+              <div class="map-grid"></div>
+              <div class="map-zone zone-a"></div>
+              <div class="map-zone zone-b"></div>
+              <div class="map-radar"></div>
+              <div class="map-sweep"></div>
+              <span class="map-pin p1">A1</span><span class="map-pin p2">B4</span><span class="map-pin p3">C7</span>
+              <div class="map-footer"><span>GRID 07-34N</span><span>42.881 / 19.004</span></div>
+            </div>
+            <div class="intel-rows">
+              <div><span>THREAT</span><b class="threat">SEVERE</b></div>
+              <div><span>VISIBILITY</span><b>LOW / DUST</b></div>
+              <div><span>EXTRACTION</span><b>06:00</b></div>
+            </div>
+            <div class="intel-quote">“The relay is still broadcasting. That means somebody wants us to find it.”<small>— CPL. VOSS, RAVEN-1</small></div>
+          </div>
+
+          <div class="side-card controls-card">
+            <div class="side-head"><span>OPERATOR CONTROLS</span><b>PC</b></div>
+            <div class="control-grid">
+              <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>MOVE</span></div>
+              <div><kbd>SHIFT</kbd><span>SPRINT</span></div>
+              <div><kbd>CTRL</kbd><span>CROUCH</span></div>
+              <div><kbd>MOUSE</kbd><span>AIM / FIRE</span></div>
+              <div><kbd>RMB</kbd><span>AIM DOWN SIGHT</span></div>
+              <div><kbd>R</kbd><span>RELOAD</span></div>
+              <div><kbd>G</kbd><span>FRAG</span></div>
+              <div><kbd>1</kbd><kbd>2</kbd><span>SWAP</span></div>
+              <div><kbd>M</kbd><span>MUTE</span></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <footer class="menu-footer">
+        <span>SIM BUILD 7.4.1 // WEBGL</span>
+        <span class="footer-center">ALL GAMEPLAY RECORDED IN-ENGINE</span>
+        <span>© 2031 OVERWATCH TOC</span>
+      </footer>
+      <div class="mobile-tip" id="mobile-tip">TOUCH CONTROLS DETECTED — START MISSION TO DEPLOY</div>
+    </section>
+
+    <!-- HUD -->
+    <section id="hud" class="hud hidden" aria-hidden="true">
+      <div id="compass-wrap" class="compass-wrap">
+        <canvas id="compass" width="760" height="44"></canvas>
+        <div class="compass-notch"></div>
+        <div class="compass-degree" id="compass-degree">N</div>
+      </div>
+
+      <div id="boss-bar" class="boss-bar hidden">
+        <div class="boss-head"><span>HEAVY CONTACT</span><b>WARDEN</b><em>ELITE GUARD</em></div>
+        <div class="boss-track"><i id="boss-fill"></i></div>
+      </div>
+
+      <div class="objective-panel">
+        <div class="obj-tag"><i></i> PRIMARY OBJECTIVE</div>
+        <div class="obj-title">HOLD THE BLACKSITE</div>
+        <div class="obj-sub" id="objective-sub">REPEL ALL ASSAULT WAVES</div>
+        <div class="wave-line">
+          <span id="wave-label">WAVE 01 // 05</span>
+          <span id="hostile-count">HOSTILES 0</span>
+        </div>
+        <div class="wave-bar"><i id="wave-bar-fill"></i></div>
+      </div>
+
+      <div class="radar-panel">
+        <div class="radar-top"><span>UAV // LOCAL</span><b id="radar-range">28M</b></div>
+        <div class="radar-frame">
+          <canvas id="radar" width="220" height="220"></canvas>
+          <div class="radar-cross"></div>
+          <div class="radar-sweep"></div>
+          <div class="radar-n">N</div>
+        </div>
+        <div class="radar-bottom"><span>GRID 07</span><span class="radar-live"><i></i> LIVE</span></div>
+      </div>
+
+      <div class="score-panel">
+        <div><span>SCORE</span><b id="score-value">000000</b></div>
+        <div><span>KILLS</span><b id="kill-value">00</b></div>
+        <div><span>STREAK</span><b id="streak-value">x1</b></div>
+      </div>
+
+      <div id="crosshair" class="crosshair">
+        <span class="ch ch-t"></span><span class="ch ch-r"></span><span class="ch ch-b"></span><span class="ch ch-l"></span>
+        <span class="ch-dot"></span>
+        <div id="hitmarker" class="hitmarker"><i></i><i></i><i></i><i></i></div>
+      </div>
+
+      <div class="vitals">
+        <div class="operator-tag"><span class="op-sigil">R1</span><div><b>RAVEN-1</b><small>OPERATOR // ACTIVE</small></div></div>
+        <div class="health-row">
+          <div class="vital-label"><span>HEALTH</span><b id="health-value">100</b></div>
+          <div class="vital-bar"><i id="health-bar"></i></div>
+        </div>
+        <div class="armor-row">
+          <div class="vital-label"><span>ARMOR</span><b id="armor-value">75</b></div>
+          <div class="vital-bar armor"><i id="armor-bar"></i></div>
+        </div>
+        <div class="vitals-foot"><span id="damage-state">COMBAT READY</span><span>M / AUDIO</span></div>
+      </div>
+
+      <div class="weapon-panel">
+        <div class="weapon-top"><span id="weapon-name">VK-4 HAVOC</span><span id="fire-mode">AUTO</span></div>
+        <div class="ammo-readout"><span id="ammo-mag">30</span><span class="ammo-slash">/</span><span id="ammo-reserve">210</span></div>
+        <div class="ammo-bar"><i id="ammo-bar"></i></div>
+        <div class="weapon-bottom">
+          <span>5.56 NATO</span>
+          <span id="reload-state">READY</span>
+          <span class="frag-count"><i></i> × <b id="frag-count">2</b></span>
+        </div>
+      </div>
+
+      <div id="killfeed" class="killfeed"></div>
+      <div id="radio" class="radio hidden"><span class="radio-tag">OVERWATCH</span><span id="radio-text"></span></div>
+      <div id="toast" class="toast"></div>
+
+      <div id="announce" class="announce">
+        <div class="announce-kicker" id="announce-kicker">INCOMING</div>
+        <div class="announce-main" id="announce-main">WAVE 01</div>
+        <div class="announce-sub" id="announce-sub">HOSTILES INBOUND</div>
+      </div>
+
+      <div class="controls-hint">
+        <span><kbd>WASD</kbd> MOVE</span><span><kbd>SHIFT</kbd> SPRINT</span><span><kbd>RMB</kbd> ADS</span><span><kbd>R</kbd> RELOAD</span><span><kbd>G</kbd> FRAG</span><span><kbd>ESC</kbd> PAUSE</span>
+      </div>
+
+      <div class="mission-timer">
+        <span id="mission-time">00:00</span>
+        <small>MISSION TIME</small>
+      </div>
+    </section>
+
+    <!-- TOUCH CONTROLS -->
+    <section id="touch-ui" class="touch-ui hidden" aria-hidden="true">
+      <div id="move-stick" class="touch-stick">
+        <div class="stick-ring"><div class="stick-cardinal n">▲</div><div class="stick-cardinal e">▶</div><div class="stick-cardinal s">▼</div><div class="stick-cardinal w">◀</div><div id="move-knob" class="stick-knob"></div></div>
+        <span>MOVE</span>
+      </div>
+      <div class="look-hint" id="look-hint"><span>◎</span> DRAG TO LOOK</div>
+      <div class="touch-actions">
+        <button id="btn-aim" class="touch-btn small" type="button">ADS</button>
+        <button id="btn-swap" class="touch-btn small" type="button">SWAP</button>
+        <button id="btn-reload" class="touch-btn small" type="button">RELOAD</button>
+        <button id="btn-grenade" class="touch-btn small" type="button">FRAG</button>
+        <button id="btn-jump" class="touch-btn small jump" type="button">JUMP</button>
+        <button id="btn-fire" class="touch-btn fire" type="button"><span>FIRE</span></button>
+      </div>
+      <div class="touch-pause"><button id="btn-touch-pause" type="button">Ⅱ</button></div>
+      <div class="rotate-hint" id="rotate-hint">↻ ROTATE FOR WIDESCREEN</div>
+    </section>
+
+    <!-- PAUSE -->
+    <section id="pause" class="overlay hidden" aria-hidden="true">
+      <div class="overlay-panel pause-panel">
+        <div class="panel-code">SIMULATION SUSPENDED</div>
+        <h2>OPERATION <em>PAUSED</em></h2>
+        <p class="panel-copy">The sector is holding. Finish your business, operator.</p>
+        <div class="pause-stats">
+          <div><span>WAVE</span><b id="pause-wave">01</b></div>
+          <div><span>KILLS</span><b id="pause-kills">0</b></div>
+          <div><span>SCORE</span><b id="pause-score">0</b></div>
+        </div>
+        <div class="panel-actions">
+          <button id="resume" class="panel-btn primary" type="button"><span>RESUME OPERATION</span><small>CLICK TO RETURN</small></button>
+          <button id="restart" class="panel-btn" type="button">RESTART MISSION</button>
+          <button id="quit" class="panel-btn danger" type="button">ABORT TO TITLE</button>
+        </div>
+        <div class="pause-keys">
+          <span><kbd>WASD</kbd> MOVE</span><span><kbd>RMB</kbd> AIM</span><span><kbd>R</kbd> RELOAD</span><span><kbd>G</kbd> FRAG</span><span><kbd>1</kbd><kbd>2</kbd> SWAP</span><span><kbd>M</kbd> MUTE</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- END -->
+    <section id="end" class="overlay hidden" aria-hidden="true">
+      <div class="overlay-panel end-panel">
+        <div class="panel-code" id="end-code">MISSION STATUS</div>
+        <h2 id="end-title">MISSION <em>COMPLETE</em></h2>
+        <p class="panel-copy" id="end-copy">The blacksite is quiet. Extraction is inbound.</p>
+        <div class="end-stats">
+          <div><span>FINAL SCORE</span><b id="end-score">0</b></div>
+          <div><span>ELIMINATIONS</span><b id="end-kills">0</b></div>
+          <div><span>HEADSHOTS</span><b id="end-headshots">0</b></div>
+          <div><span>ACCURACY</span><b id="end-accuracy">0%</b></div>
+          <div><span>WAVES CLEARED</span><b id="end-waves">0 / 5</b></div>
+          <div><span>TIME</span><b id="end-time">00:00</b></div>
+        </div>
+        <div class="panel-actions">
+          <button id="redeploy" class="panel-btn primary" type="button"><span>REDEPLOY</span><small>RUN IT AGAIN</small></button>
+          <button id="end-quit" class="panel-btn" type="button">RETURN TO TITLE</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="rotate-overlay" class="rotate-overlay hidden">
+      <div class="rotate-icon">↻</div>
+      <b>ROTATE YOUR DEVICE</b>
+      <span>LANDSCAPE GIVES YOU THE FULL TACTICAL VIEW</span>
+    </div>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
